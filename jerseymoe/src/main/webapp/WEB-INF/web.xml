@@ -6,9 +6,9 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
-            <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>org.wcecil</param-value>
-        </init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.wcecil.application.MyApp</param-value>
+		</init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
