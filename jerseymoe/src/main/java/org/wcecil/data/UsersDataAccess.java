@@ -80,6 +80,31 @@ public class UsersDataAccess {
 		return result;
 
 	}
+	
+	public static UserBean saveUser(UserBean insert) {
+		UserBean result = null;
+
+		if (insert == null || insert.getUuid() == null) {
+			return null;
+		}
+
+		insert.setUpdatedOn(TimeUtil.getNow());
+
+		try {
+			MongoTemplate template = MongoUtil.getTemplate();
+
+			template.save(insert, USER_COLLECTION());
+
+			result = insert;
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+
+	}
 
 	public static List<UserBean> listAllUsers() {
 		List<UserBean> result = null;

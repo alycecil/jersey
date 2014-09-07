@@ -10,6 +10,16 @@ public class UserBean extends BeanBase {
 	@Indexed(unique=true)
 	private String uuid;
 
+	private String cookie;
+	
+	public String getCookie() {
+		return cookie;
+	}
+
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
+	}
+
 	private Long createdOn;
 
 	private Long updatedOn;

@@ -1,11 +1,11 @@
 package org.wcecil.data;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.wcecil.TestBase;
 import org.wcecil.application.MyApp;
 import org.wcecil.beans.UserBean;
@@ -14,14 +14,14 @@ import org.wcecil.beans.UserBeanTest;
 public class UsersDataTest extends TestBase {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		MyApp.APP_KEY_POSTFIX = "TEST";
+		MyApp.APP_KEY_POSTFIX = ":TEST";
 
 		deleteAll();
 	}
 
 	@AfterClass
 	public static void afterClass() throws Exception {
-		MyApp.APP_KEY_POSTFIX = "TEST";
+		MyApp.APP_KEY_POSTFIX = ":TEST";
 
 		deleteAll();
 	}
@@ -92,6 +92,25 @@ public class UsersDataTest extends TestBase {
 
 		UserBean resBeanGet = UsersDataAccess.getUser(bean.getUuid());
 
+		assertEquals("Result bean is equivilent after get", bean, resBeanGet);
+
+		deleteBean(bean);
+
+	}
+	
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void insertUpdateDeleteTest() {
+		
+		UserBean bean = insertBean();
+		
+		bean.setCookie(UUID.randomUUID().toString());
+		
+		UsersDataAccess.saveUser(bean);
+		
+		UserBean resBeanGet = UsersDataAccess.getUser(bean.getUuid());
+		
 		assertEquals("Result bean is equivilent after get", bean, resBeanGet);
 
 		deleteBean(bean);
