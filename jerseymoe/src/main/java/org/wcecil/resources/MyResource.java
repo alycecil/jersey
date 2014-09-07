@@ -40,7 +40,7 @@ public class MyResource {
     public String testMongo(@HeaderParam("user-agent") String userAgent) {
     	String msg ="none";
     	try {
-			DB db = MongoUtil.mongo();
+			DB db = MongoUtil.getInstanceDB();
 			
 			DBCollection testCol = db.getCollection("test");
 			BasicDBObject dbo = new BasicDBObject();
