@@ -3,6 +3,7 @@ package org.wcecil.beans;
 import java.io.IOException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -20,6 +21,11 @@ public abstract class BeanBase {
 		return getObjectAsJsonString(this);
 	}
 
+	/**
+	 * Gets as a not null
+	 * @param o
+	 * @return
+	 */
 	@JsonIgnore
 	public String getObjectAsJsonString(Object o) {
 		String json = null;
@@ -27,6 +33,8 @@ public abstract class BeanBase {
 		ObjectMapper mapper = new ObjectMapper();
 
 		ObjectWriter writer = mapper.writer();
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		
 		try {
 			json = writer.writeValueAsString(o);
 		} catch (JsonProcessingException e) {
@@ -70,7 +78,8 @@ public abstract class BeanBase {
 
 				BeanBase b = (BeanBase) obj;
 
-				return getObjectAsJsonString().equals(b.getObjectAsJsonString());
+				return getObjectAsJsonString()
+						.equals(b.getObjectAsJsonString());
 			} else if (obj instanceof String) {
 				return getObjectAsJsonString().equals(obj);
 			}

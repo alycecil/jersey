@@ -1,62 +1,51 @@
 package org.wcecil.resources;
 
-import java.net.UnknownHostException;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import org.wcecil.util.MongoUtil;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import org.glassfish.jersey.server.ContainerRequest;
+import org.wcecil.application.MyApp;
+import org.wcecil.business.UserBusiness;
 
 /**
  * Root resource (exposed at "myresource" path)
  */
 @Path("common")
 public class MyResource {
+	@Context
+	ContainerRequest req;
 
-    /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
-     *
-     * @return String that will be returned as a text/plain response.
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt(@HeaderParam("user-agent") String userAgent) {
-        return "Got it from '"+userAgent+"'.";
-    }
-    
-    
-    
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/test")
-    public String testMongo(@HeaderParam("user-agent") String userAgent) {
-    	String msg ="none";
-    	try {
-			DB db = MongoUtil.getInstanceDB();
-			
-			DBCollection testCol = db.getCollection("test");
-			BasicDBObject dbo = new BasicDBObject();
-			dbo.append("last_agent", userAgent);
-			
-			testCol.insert(dbo);
-			
-			msg ="done";
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			msg = e.getLocalizedMessage();
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			msg = e.getLocalizedMessage();
+	/**
+	 * Method handling HTTP GET requests. The returned object will be sent to
+	 * the client as "text/plain" media type.
+	 * 
+	 * @return String that will be returned as a text/plain response.
+	 */
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/user/get")
+	public Response getIt(@HeaderParam(MyApp.AUTH_TOKEN) String uuidHeader, @QueryParam("uuid") String uuid) {
+		if(uuid==null){
+			uuid=uuidHeader;
 		}
-    	
-        return "Got it from '"+userAgent+"'. ack:"+msg;
-    }
+		return UserBusiness.getUser(req, uuid);
+		
+	}
+	
+	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/test")
+	public Response getItTest(@HeaderParam(MyApp.AUTH_TOKEN) String uuid) {
+
+		return UserBusiness.getUser(req, uuid);
+		
+	}
+
 }

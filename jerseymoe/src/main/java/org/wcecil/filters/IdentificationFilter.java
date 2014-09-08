@@ -1,49 +1,48 @@
 package org.wcecil.filters;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.wcecil.application.MyApp;
 import org.wcecil.beans.UserBean;
 import org.wcecil.data.UsersDataAccess;
 
 public class IdentificationFilter implements ContainerRequestFilter {
-
-	private static final String AUTH = "Authorization";
-	private static final String AUTH_TOKEN = "Auth_Token";
-	private static final String COOKIE = "Cookie";
 
 	@Override
 	public void filter(ContainerRequestContext req) throws IOException {
 		// get headers
 		MultivaluedMap<String, String> headers = req.getHeaders();
 
+		String token = null;
 		if (headers != null) {
 			System.out.println(headers.toString());
 
-			boolean hasToken = false;
-			String token = null;
+			token = verifyLogin(req, headers);
 
-			token = verifyLogin(req, headers, hasToken);
-
-			req.getHeaders().add(AUTH_TOKEN, token);
+			req.getHeaders().add(MyApp.AUTH_TOKEN, token);
 
 			updateCookie(req, token, headers);
 
 		}
+
 	}
 
 	public String verifyLogin(ContainerRequestContext req,
-			MultivaluedMap<String, String> headers, boolean hasToken) {
+			MultivaluedMap<String, String> headers) {
 		String token = null;
+		boolean hasToken = false;
 		// get header value for Authorization : Token XXXX
-		if (headers.containsKey(AUTH)) {
-			for (String value : headers.get(AUTH)) {
+		if (headers.containsKey(MyApp.AUTH)) {
+			for (String value : headers.get(MyApp.AUTH)) {
 
 				if (value != null) {
 					value = value.toUpperCase().trim();
@@ -57,8 +56,11 @@ public class IdentificationFilter implements ContainerRequestFilter {
 
 		if (!hasToken) {
 			// otherwise gen a guid and set it in
-			token = UUID.randomUUID().toString().toUpperCase();
-			headers.add(AUTH, "Token " + token);
+			token = getCookie(headers);
+			if (token == null) {
+				token = UUID.randomUUID().toString().toUpperCase();
+			}
+			headers.add(MyApp.AUTH, "Token " + token);
 
 			createToken(req, token);
 		} else {
@@ -72,25 +74,33 @@ public class IdentificationFilter implements ContainerRequestFilter {
 		if (token == null) {
 			return;
 		}
-		if (headers.containsKey(COOKIE)) {
-			String session = null;
-			for (String value : headers.get(COOKIE)) {
+		String session = getCookie(headers);
+
+		if (session != null) {
+			UserBean user = UsersDataAccess.getUser(token);
+			user.setCookie(session);
+			UsersDataAccess.saveUser(user);
+		}
+	}
+
+	public String getCookie(MultivaluedMap<String, String> headers) {
+		String session = null;
+		if (headers.containsKey(MyApp.COOKIE)) {
+
+			for (String value : headers.get(MyApp.COOKIE)) {
 
 				if (value != null) {
 					value = value.toUpperCase().trim();
-					if (value.startsWith("JSESSIONID=")) {
+					if (value.startsWith(MyApp.JSESSIONID + "=")) {
 
-						session = value.substring("JSESSIONID=".length());
+						session = value.substring((MyApp.JSESSIONID + "=")
+								.length());
 					}
 				}
 			}
-
-			if (session != null) {
-				UserBean user = UsersDataAccess.getUser(token);
-				user.setCookie(session);
-				UsersDataAccess.saveUser(user);
-			}
 		}
+		return session;
+
 	}
 
 	private void verifyToken(ContainerRequestContext req, String token) {
