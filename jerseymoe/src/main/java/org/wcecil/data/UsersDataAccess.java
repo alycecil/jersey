@@ -15,10 +15,9 @@ import com.mongodb.WriteResult;
 
 public class UsersDataAccess {
 
-	private static String USER_COLLECTION_HIDDEN = MyApp.APP_KEY_PREFIX
-			+ "COMMON_USERS"+ MyApp.APP_KEY_POSTFIX ;
-	
-	public static String USER_COLLECTION(){
+	private static String USER_COLLECTION_HIDDEN = "COMMON_USERS";
+
+	public static String USER_COLLECTION() {
 		return MyApp.getKey(USER_COLLECTION_HIDDEN);
 	}
 
@@ -27,11 +26,11 @@ public class UsersDataAccess {
 		if (UUID == null) {
 			return null;
 		}
-	
+
 		try {
 			MongoTemplate template = MongoUtil.getTemplate();
-			
-			//build query
+
+			// build query
 			Query q = new Query(Criteria.where("uuid").is(UUID));
 			List<UserBean> res = template.find(q, UserBean.class,
 					USER_COLLECTION());
@@ -80,7 +79,7 @@ public class UsersDataAccess {
 		return result;
 
 	}
-	
+
 	public static UserBean saveUser(UserBean insert) {
 		UserBean result = null;
 
@@ -132,8 +131,9 @@ public class UsersDataAccess {
 
 			UserBean resultTemp = getUser(uuid);
 			if (resultTemp != null) {
-				WriteResult res = template.remove(resultTemp,USER_COLLECTION());
-				if (res!=null && res.getN() > 0) {
+				WriteResult res = template
+						.remove(resultTemp, USER_COLLECTION());
+				if (res != null && res.getN() > 0) {
 					result = resultTemp;
 				} else {
 					System.err.println("Unable to delete "
@@ -153,5 +153,5 @@ public class UsersDataAccess {
 		return result;
 
 	}
-	
+
 }
