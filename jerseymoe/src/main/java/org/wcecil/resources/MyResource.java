@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.wcecil.application.MyApp;
+import org.wcecil.business.CommonBusiness;
 import org.wcecil.business.UserBusiness;
 
 /**
@@ -28,24 +29,33 @@ public class MyResource {
 	 * @return String that will be returned as a text/plain response.
 	 */
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/user/get")
-	public Response getIt(@HeaderParam(MyApp.AUTH_TOKEN) String uuidHeader, @QueryParam("uuid") String uuid) {
-		if(uuid==null){
-			uuid=uuidHeader;
+	public Response getIt(@HeaderParam(MyApp.AUTH_TOKEN) String uuidHeader,
+			@QueryParam("uuid") String uuid) {
+		if (uuid == null) {
+			uuid = uuidHeader;
 		}
 		return UserBusiness.getUser(req, uuid);
-		
+
 	}
-	
-	
+
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/test")
 	public Response getItTest(@HeaderParam(MyApp.AUTH_TOKEN) String uuid) {
 
 		return UserBusiness.getUser(req, uuid);
-		
+
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/list")
+	public Response getMethodsAvailavle(
+			@HeaderParam(MyApp.AUTH_TOKEN) String uuid) {
+
+		return CommonBusiness.getAllResources();
+
+	}
 }

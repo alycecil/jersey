@@ -85,7 +85,6 @@ public class UsersDataTest extends TestBase {
 		return bean;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void insertGetDeleteTest() {
 		UserBean bean = insertBean();
@@ -99,7 +98,6 @@ public class UsersDataTest extends TestBase {
 	}
 	
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void insertUpdateDeleteTest() {
 		

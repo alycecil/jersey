@@ -1,6 +1,8 @@
 package org.wcecil.filters;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
@@ -21,10 +23,27 @@ public class ResponseFilter implements ContainerResponseFilter {
 			//TODO figure out a better way to do this
 			resp.getHeaders().add("Set-Cookie","JSESSIONID="+token+"; Path=/jerseymoe/");
 		}
-		
+		if(resp.getEntity()==null){
+			return;
+		}
 		if(resp.getEntity() instanceof BeanBase){
 			BeanBase bean = (BeanBase)resp.getEntity();
 			resp.setEntity(bean.getObjectAsJsonString());
+		}
+		
+		if(resp.getEntity() instanceof Collection){
+			
+			ArrayList l = new ArrayList();
+			Collection c = (Collection)resp.getEntity();
+			for(Object o : c){
+				if(o instanceof BeanBase){
+					l.add(((BeanBase) o).getObjectAsJsonString());
+				}else{
+					l.add(o);
+				}
+			}
+			
+			resp.setEntity(l);
 		}
 		
 		
