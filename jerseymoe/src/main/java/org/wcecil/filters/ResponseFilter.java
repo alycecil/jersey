@@ -21,7 +21,7 @@ public class ResponseFilter implements ContainerResponseFilter {
 
 			// TODO figure out a better way to do this
 			resp.getHeaders().add("Set-Cookie",
-					"JSESSIONID=" + token + "; Path=/jerseymoe/");
+					MyApp.JSESSIONID+"=" + token + "; Path=/jerseymoe/");
 		}
 		
 		
@@ -31,6 +31,8 @@ public class ResponseFilter implements ContainerResponseFilter {
 		
 		resp.getHeaders().add("X-Powered-By:", "JerseyMoe");
 		
+		
+		//get as json if possible
 		if (resp.getEntity() == null) {
 			return;
 		}
