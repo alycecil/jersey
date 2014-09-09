@@ -1,7 +1,6 @@
 package org.wcecil.filters;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.ws.rs.container.ContainerRequestContext;
@@ -19,34 +18,31 @@ public class ResponseFilter implements ContainerResponseFilter {
 		String token = req.getHeaderString(MyApp.AUTH_TOKEN);
 		if (token != null && !token.isEmpty()) {
 			resp.getHeaders().add(MyApp.AUTH_TOKEN, token);
-			
-			//TODO figure out a better way to do this
-			resp.getHeaders().add("Set-Cookie","JSESSIONID="+token+"; Path=/jerseymoe/");
+
+			// TODO figure out a better way to do this
+			resp.getHeaders().add("Set-Cookie",
+					"JSESSIONID=" + token + "; Path=/jerseymoe/");
 		}
-		if(resp.getEntity()==null){
+		if (resp.getEntity() == null) {
 			return;
 		}
-		if(resp.getEntity() instanceof BeanBase){
-			BeanBase bean = (BeanBase)resp.getEntity();
-			resp.setEntity(bean.getObjectAsJsonString());
+		if (resp.getEntity() instanceof BeanBase) {
+			BeanBase bean = (BeanBase) resp.getEntity();
+			resp.setEntity(bean.getObjectAsJsonString(true));
 		}
-		
-		if(resp.getEntity() instanceof Collection){
-			
-			ArrayList l = new ArrayList();
-			Collection c = (Collection)resp.getEntity();
-			for(Object o : c){
-				if(o instanceof BeanBase){
-					l.add(((BeanBase) o).getObjectAsJsonString());
-				}else{
-					l.add(o);
-				}
-			}
-			
-			resp.setEntity(l);
-		}
-		
-		
-	}
 
+		if (resp.getEntity() instanceof Collection) {
+			String json = null;
+			try {
+				json = BeanBase.getObjectAsJsonString(resp.getEntity(), true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (json != null) {
+				resp.setEntity(json);
+			}
+		}
+
+	}
 }

@@ -93,6 +93,13 @@ public class IdentificationFilter implements ContainerRequestFilter {
 
 						session = value.substring((MyApp.JSESSIONID + "=")
 								.length());
+
+						if (session.indexOf(';') > 0) {
+							session = session
+									.substring(0, session.indexOf(';'));
+						}
+
+						session = session.trim();
 					}
 				}
 			}

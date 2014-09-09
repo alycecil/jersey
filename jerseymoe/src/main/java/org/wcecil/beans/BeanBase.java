@@ -21,23 +21,48 @@ public abstract class BeanBase {
 	 */
 	@JsonIgnore
 	public String getObjectAsJsonString() {
-		return getObjectAsJsonString(this);
+		return getObjectAsJsonString(this, false);
+	}
+	
+	@JsonIgnore
+	public String getObjectAsJsonString(boolean prettyPrint) {
+		return getObjectAsJsonString(this, prettyPrint);
 	}
 
+	
 	/**
-	 * Gets as a not null
+	 * 
 	 * @param o
 	 * @return
 	 */
+	public static String getObjectAsJsonString(Object o){
+		return getObjectAsJsonString(o, false);
+	}
+	
+	/**
+	 * Gets a not null object into a jackson's json string
+	 * 
+	 * @param o
+	 * @param prettyPrint 
+	 * @return
+	 */
 	@JsonIgnore
-	public static String getObjectAsJsonString(Object o) {
+	public static String getObjectAsJsonString(Object o, boolean prettyPrint) {
 		String json = null;
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		ObjectWriter writer = mapper.writer();
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		
+		ObjectWriter writer = null;
+
+		if (prettyPrint) {
+			writer = mapper.writerWithDefaultPrettyPrinter();
+		} else {
+			writer = mapper.writer();
+		}
+		
+
 		try {
 			json = writer.writeValueAsString(o);
 		} catch (JsonProcessingException e) {
