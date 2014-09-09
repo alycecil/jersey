@@ -53,6 +53,7 @@ public class CommonBusiness {
 
 		List<ClassDescription> classes = new ArrayList<ClassDescription>();
 		for (Class<?> clz : resources) {
+			relativepath="/webapi";
 			ClassDescription _class = new ClassDescription();
 			List<MethodDescription> methods = new ArrayList<MethodDescription>();
 

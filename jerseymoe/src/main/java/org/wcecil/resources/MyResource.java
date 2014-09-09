@@ -17,7 +17,7 @@ import org.wcecil.business.UserBusiness;
 /**
  * Root resource (exposed at "myresource" path)
  */
-@Path("common")
+@Path("/common")
 public class MyResource {
 	@Context
 	ContainerRequest req;
