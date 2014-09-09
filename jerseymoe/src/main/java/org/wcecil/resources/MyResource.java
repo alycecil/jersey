@@ -31,7 +31,7 @@ public class MyResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/user/get")
-	public Response getIt(@HeaderParam(MyApp.AUTH_TOKEN) String uuidHeader,
+	public Response getUser(@HeaderParam(MyApp.AUTH_TOKEN) String uuidHeader,
 			@QueryParam("uuid") String uuid) {
 		if (uuid == null) {
 			uuid = uuidHeader;
@@ -52,7 +52,7 @@ public class MyResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getMethodsAvailavle(
+	public Response getMethodsAvailable(
 			@HeaderParam(MyApp.AUTH_TOKEN) String uuid) {
 
 		return CommonBusiness.getAllResources();
