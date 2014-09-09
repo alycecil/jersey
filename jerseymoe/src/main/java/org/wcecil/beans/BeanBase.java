@@ -30,7 +30,7 @@ public abstract class BeanBase {
 	 * @return
 	 */
 	@JsonIgnore
-	public String getObjectAsJsonString(Object o) {
+	public static String getObjectAsJsonString(Object o) {
 		String json = null;
 
 		ObjectMapper mapper = new ObjectMapper();

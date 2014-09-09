@@ -21,14 +21,14 @@ public class DataStorageAccess {
 	public static DataBean getKeyForOwner(String uuid, String key) {
 		DataBean result = null;
 		if (uuid == null || key == null || key.isEmpty()) {
-			return null;
+			throw new IllegalArgumentException();
 		}
 
 		try {
 			MongoTemplate template = MongoUtil.getTemplate();
 
 			// build query
-			Query q = new Query(Criteria.where("uuid").is(uuid).and("key")
+			Query q = new Query(Criteria.where("owner").is(uuid).and("key")
 					.is(key));
 			List<DataBean> res = template.find(q, DataBean.class,
 					COLLECTION_NAME());
@@ -54,7 +54,7 @@ public class DataStorageAccess {
 	public static DataBean setKeyForOwner(DataBean data) {
 		if (data == null || data.getKey() == null || data.getOwner() == null
 				|| data.getKey().isEmpty()) {
-			return null;
+			throw new IllegalArgumentException();
 		}
 
 		//get id for upsert if possible
