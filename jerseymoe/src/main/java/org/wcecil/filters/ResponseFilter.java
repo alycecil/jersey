@@ -23,6 +23,14 @@ public class ResponseFilter implements ContainerResponseFilter {
 			resp.getHeaders().add("Set-Cookie",
 					"JSESSIONID=" + token + "; Path=/jerseymoe/");
 		}
+		
+		
+		//allow requests from anywhere
+		
+		resp.getHeaders().add("Access-Control-Allow-Origin:", "*");
+		
+		resp.getHeaders().add("X-Powered-By:", "JerseyMoe");
+		
 		if (resp.getEntity() == null) {
 			return;
 		}
