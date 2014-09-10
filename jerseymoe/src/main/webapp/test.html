@@ -1,0 +1,61 @@
+<html>
+<head>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/handlebars-v2.0.0.js"></script>
+	<script type="text/javascript" src="js/connection.js"></script>
+	<script type="text/javascript">
+	
+	function error(msg, x){
+		$(".result").html(x+":"+JSON.stringify(msg));
+	}
+	
+	function callback(data){
+		$(".result").html(JSON.stringify(data));
+		
+	}
+	
+	function clickGet(value){
+		
+		conection.get('webapi/data/get?key='+value ,'get',callback,error);
+	}
+	function clickSave(value){
+		
+		conection.get('webapi/data/get?key='+value ,'get',callback,error);
+	}
+	
+	function onLoad(){
+		$('a.get').on('click', clickGet);
+		$('a.save').on('click', clickSave);
+		
+		conection.init('http://tomcat-alysforever.rhcloud.com/jerseymoe/');
+		conection.get('webapi/common/user/get '+value ,'get',callback,error);
+	}
+	
+	</script>
+</head>
+<body onload="onLoad()">
+    <h2>Jersey Moe RESTful Web Application!</h2>
+    <p class="result"></p>
+    <p>key: <input type="text" name="key" id="key"> <a class="get" href="#">get</a>
+    <p>value: <input type="text" name="value" id="value"> <a class="save" href="#">save</a>
+    
+<script id="helper-template" type="text/x-handlebars-template">
+<p>
+{{#each this}}
+<p>		<span class="blockname">{{name}}</span> 
+<br>	path <span class="blockpath">{{path}}</span>
+ {{#each methods}}
+   <p>		<span class="methodname">{{name}}</span> 
+   <br>	path <span class="methodpath">{{path}}</span>
+   <br>	type <span class="methodtype">{{method}}</span>
+<br> params
+ {{#each params}}
+   <br>		<span class="paramname">{{name}}</span> 
+   <br>	type <span class="paramtype">{{type}}</span>
+   <br>	form <span class="paramform">{{form}}</span>
+ {{/each}}
+ {{/each}}
+{{/each}}
+</script>
+</body>
+</html>
