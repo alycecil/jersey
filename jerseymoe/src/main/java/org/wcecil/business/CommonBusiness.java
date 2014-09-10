@@ -120,12 +120,17 @@ public class CommonBusiness {
 			}
 		}
 
-		for (Parameter p : m.getParameters()) {
+		Class<?>[] pTypes = m.getParameterTypes();
+		Annotation[][] pAnnas = m.getParameterAnnotations();
+		
+		int len = Math.min(pAnnas.length, pTypes.length);
+		for (int k = 0; k < len; k++) {
 			ParameterDescription param = new ParameterDescription();
-			param.setType(p.getType().getName());
-			param.setName(p.getName());
+			param.setType(pTypes[k].getName());
+			param.setName("arg"+k);
 
-			for (Annotation a : p.getDeclaredAnnotations()) {
+			for (int inner = 0 ; inner < pAnnas[k].length; inner++) {
+				Annotation a = pAnnas[k][inner];
 				if (a != null) {
 					if (a instanceof QueryParam) {
 						QueryParam q = (QueryParam) a;
