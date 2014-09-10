@@ -29,6 +29,7 @@ public class ResponseFilter implements ContainerResponseFilter {
 		
 		resp.getHeaders().add("Access-Control-Allow-Origin", "*");
 		resp.getHeaders().add("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE, HEAD");
+		resp.getHeaders().add("Access-Control-Allow-Headers","authorization");
 		
 		
 		resp.getHeaders().add("X-Powered-By:", "JerseyMoe");

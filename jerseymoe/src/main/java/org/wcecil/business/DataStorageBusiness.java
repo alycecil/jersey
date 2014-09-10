@@ -26,7 +26,7 @@ public class DataStorageBusiness {
 
 		// well we failed
 		return Response.status(Status.NOT_FOUND)
-				.entity("Nothing found for " + key + "@" + key).build();
+				.entity("Nothing found for " + key + "@" + uuid).build();
 	}
 
 	public static Response setKeyValue(String uuid, String key, Object value) {

@@ -4,6 +4,9 @@
 <script type="text/javascript" src="js/handlebars-v2.0.0.js"></script>
 <script type="text/javascript" src="js/connection.js"></script>
 <script type="text/javascript">
+	var server = 'http://localhost:8080/jerseymoe/';
+	//'http://tomcat-alysforever.rhcloud.com/jerseymoe/'
+
 	function error(msg, x) {
 		$(".result").html(x + ":" + JSON.stringify(msg));
 	}
@@ -13,29 +16,37 @@
 
 	}
 
+	function callbackSetup(data) {
+		$(".resultAuth").html(JSON.stringify(data));
+
+		if (data != null && data["uuid"] != null) {
+			conection.setToken(data["uuid"]);
+		}
+	}
+
 	function clickGet(value) {
 		var key = encodeURIComponent($('input#key').val());
-		conection.get('webapi/data/get?key=' + key, 'get', callback,
-				error);
+		conection.get('webapi/data/get?key=' + key, 'get', callback, error);
 	}
 	function clickSave(value) {
 		var key = encodeURIComponent($('input#key').val());
 		var val = encodeURIComponent($('input#value').val());
-		conection.get('webapi/data/set?key=' + val + '&value=' + val, 'put', callback,
-				error);
+		conection.get('webapi/data/set?key=' + key + '&value=' + val, 'put',
+				callback, error);
 	}
 
 	function onLoad() {
 		$('a.get').on('click', clickGet);
 		$('a.save').on('click', clickSave);
 
-		conection.init('http://tomcat-alysforever.rhcloud.com/jerseymoe/');
-		conection.get('webapi/common/user/get ', 'get', callback, error);
+		conection.init(server);
+		conection.get('webapi/common/user/get ', 'get', callbackSetup, error);
 	}
 </script>
 </head>
 <body onload="onLoad()">
 	<h2>Jersey Moe RESTful Web Application!</h2>
+	<p class="resultAuth"></p>
 	<p class="result"></p>
 	<p>
 		key: <input type="text" name="key" id="key"> <a class="get"

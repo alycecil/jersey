@@ -5,12 +5,17 @@ var conection = new function() {
 		_base = base;
 		_token = token;
 	};
-	this.get = function(url, type,callback, error) {
-		if(_base!=null){
-			url=_base+url;
+
+	this.setToken = function(token) {
+		_token = token;
+	};
+
+	this.get = function(url, type, callback, error) {
+		if (_base != null) {
+			url = _base + url;
 		}
-		if(type==null){
-			type='get';
+		if (type == null) {
+			type = 'get';
 		}
 		$.ajax(url, {
 
